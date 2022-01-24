@@ -4,7 +4,7 @@ const test = require("./Router/test");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const { User } = require("./models/User");
-
+const config = require("./config/key");
 //클라이언트에서 오는 정보를 서버에서 분석해서 가져올 수 있다.
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -12,10 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose
-  .connect(
-    "mongodb+srv://hyebin:abcd1234@cluster0.6vjis.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
