@@ -20,6 +20,9 @@ mongoose
   .catch((err) => console.log(err));
 
 //app.use("/api", test);
+app.get("/api/hello", (req, res) => {
+  res.send("안녕하세요~");
+});
 
 app.post("/api/users/register", (req, res) => {
   //회원 가입 할 때 필요한 정보를 client 에서 가져오면 그것을 데이터베이스에 넣어준다.
