@@ -23,9 +23,5 @@ app.use("/api/users", require("./routes/users"));
 app.use("/api/todo", require("./routes/todo"));
 app.use("/uploads", express.static("uploads"));
 
-app.get("/api/hello", (req, res) => {
-  res.send("안녕하세요~");
-});
-
 const port = 5000;
 app.listen(port, () => console.log(`${port}`));

@@ -6,15 +6,18 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     maxlength: 50,
+    required: [true, "how could it be no name?"],
   },
   email: {
     type: String,
     trim: true,
     unique: 1,
+    required: [true, "how could it be no email?"],
   },
   password: {
     type: String,
     maxlength: 100,
+    required: true,
   },
   lastname: {
     type: String,

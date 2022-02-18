@@ -5,6 +5,22 @@ const { User } = require("../models/User");
 //================================
 //             User
 //================================
+//auth는 미들웨어
+//미들웨어 : 리퀘스트 받고 콜백전 중간에서 해주는것
+router.get("/auth", auth, (req, res) => {
+  //여기까지 미들웨어를 통과해 왔다는 이야기를 auth가 true라는 말
+  res.status(200).json({
+    _id: req.user._id,
+    //role이 0이면 일반유저, 0이 아니면 관리자로 표현
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image,
+  });
+});
 
 router.post("/register", (req, res) => {
   //회원 가입 할 때 필요한 정보를 client 에서 가져오면 그것을 데이터베이스에 넣어준다.
@@ -47,22 +63,6 @@ router.post("/login", (req, res) => {
           .json({ loginSuccess: true, userId: user._id });
       });
     });
-  });
-});
-//auth는 미들웨어
-//미들웨어 : 리퀘스트 받고 콜백전 중간에서 해주는것
-router.get("/auth", auth, (req, res) => {
-  //여기까지 미들웨어를 통과해 왔다는 이야기를 auth가 true라는 말
-  res.status(200).json({
-    _id: req.user._id,
-    //role이 0이면 일반유저, 0이 아니면 관리자로 표현
-    isAdmin: req.user.role === 0 ? false : true,
-    isAuth: true,
-    email: req.user.email,
-    name: req.user.name,
-    lastname: req.user.lastname,
-    role: req.user.role,
-    image: req.user.image,
   });
 });
 
