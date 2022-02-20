@@ -47,9 +47,15 @@ router.post("/", (req, res) => {
 router.post("/todos", (req, res) => {
   let limit = req.body.limit ? parseInt(req.body.limit) : 0;
   let skip = req.body.limit ? parseInt(req.body.skip) : 0;
+  let findArgs = {};
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      findArgs[key] = req.body.filters[key];
+    }
+  }
 
   //todo collection 에 들어있는 모든 todo를 가져오기
-  Todo.find() //모든 정보를 찾는다.
+  Todo.find(findArgs) //모든 정보를 찾는다.
     //writer이 유니크 아이디가 아닌 사용자의 정보가 필요하다
     .skip(skip)
     .limit(limit)

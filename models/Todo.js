@@ -27,6 +27,10 @@ const todoSchema = mongoose.Schema(
       maxlength: 100,
       default: 0,
     },
+    period: {
+      type: Number,
+      default: 1,
+    },
     views: {
       type: Number,
       default: 0,
