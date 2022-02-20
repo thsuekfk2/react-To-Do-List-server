@@ -45,14 +45,21 @@ router.post("/", (req, res) => {
 });
 
 router.post("/todos", (req, res) => {
+  let limit = req.body.limit ? parseInt(req.body.limit) : 0;
+  let skip = req.body.limit ? parseInt(req.body.skip) : 0;
+
   //todo collection 에 들어있는 모든 todo를 가져오기
   Todo.find() //모든 정보를 찾는다.
     //writer이 유니크 아이디가 아닌 사용자의 정보가 필요하다
+    .skip(skip)
+    .limit(limit)
     .populate("writer") // 이 유니크 아이디를 이용하여 writer에 대한 모든 정보를 가져올 수 있다.
     .exec((err, todoInfo) => {
       //쿼리를 돌리면 된다. 에러나 정보가 들어가 있다.
       if (err) return res.status(400).json({ success: false, err });
-      return res.status(200).json({ success: true, todoInfo });
+      return res
+        .status(200)
+        .json({ success: true, todoInfo, postSize: todoInfo.length });
     });
 });
 
