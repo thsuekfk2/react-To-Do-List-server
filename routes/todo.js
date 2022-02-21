@@ -50,10 +50,20 @@ router.post("/todos", (req, res) => {
   let findArgs = {};
   for (let key in req.body.filters) {
     if (req.body.filters[key].length > 0) {
-      findArgs[key] = req.body.filters[key];
+      if (key === "price") {
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          //gte 이것보다 크거나 같고 (Greater than equal)
+          $lte: req.body.filters[key][1],
+          //gte 이것보다 작거나 같은 (Less than equal)
+        };
+      } else {
+        findArgs[key] = req.body.filters[key];
+      }
     }
   }
 
+  console.log("findArgs", findArgs);
   //todo collection 에 들어있는 모든 todo를 가져오기
   Todo.find(findArgs) //모든 정보를 찾는다.
     //writer이 유니크 아이디가 아닌 사용자의 정보가 필요하다
