@@ -40,5 +40,19 @@ const todoSchema = mongoose.Schema(
   //자동으로 등록시간 업데이트가 기록됨
 );
 
+//키워드가 어디에 더 중점적인지
+todoSchema.index(
+  {
+    title: "text",
+    description: "text",
+  },
+  {
+    weight: {
+      title: 5,
+      description: 1,
+    },
+  }
+);
+
 const Todo = mongoose.model("Todo", todoSchema);
 module.exports = { Todo };
