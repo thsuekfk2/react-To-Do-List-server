@@ -99,4 +99,17 @@ router.post("/todos", (req, res) => {
   }
 });
 
+router.get("/todo_by_id", (req, res) => {
+  //productId를 이용해서 DB에서 productId와 같은 상품의 정보를 가져온다
+  let type = req.query.type;
+  let todoId = req.query.id;
+
+  Todo.find({ _id: todoId })
+    .populate("writer")
+    .exec((err, todo) => {
+      if (err) return res.status(400).send(err);
+      return res.status(200).send({ success: true, todo });
+    });
+});
+
 module.exports = router;
