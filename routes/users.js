@@ -19,6 +19,8 @@ router.get("/auth", auth, (req, res) => {
     lastname: req.user.lastname,
     role: req.user.role,
     image: req.user.image,
+    cart: req.user.cart,
+    history: req.user.history,
   });
 });
 
@@ -73,6 +75,55 @@ router.get("/logout", auth, (req, res) => {
       success: true,
     });
   });
+});
+
+router.post("/addToCart", auth, (req, res) => {
+  //먼저 user collection에 해당 유저(한명)의 정보를 가져오기
+  User.findOne({ _id: req.user._id }, (err, userInfo) => {
+    //가져온 정보에서 카트에 넣으려고 하는 상품이 카트안에 이미 있는지 확인
+    let duplicate = false;
+
+    userInfo.cart.forEach((item) => {
+      if (item.id === req.body.todoId) {
+        duplicate = true;
+      }
+    });
+    //상품이 이미 있으면 상품 개수 하나 올리기
+    if (duplicate) {
+      User.findOneAndUpdate(
+        { _id: req.user._id, "cart.id": req.body.todoId },
+        { $inc: { "cart.$.quantity": 1 } },
+        { new: true },
+        (err, userInfo) => {
+          if (err) return res.status(400).json({ success: false, err });
+          return res.status(200).send(userInfo.cart);
+        }
+      );
+    }
+    //카트안에 이미 있지 않으면
+    else {
+      //필요한 상품 정보, id, 개수 1, 날짜정보를 넣어주기
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          $push: {
+            cart: {
+              id: req.body.todoId,
+              quantiry: 1,
+              data: Date.now(),
+            },
+          },
+        },
+        { new: true },
+        (err, userInfo) => {
+          if (err) return res.status(400).json({ sucess: false, err });
+          res.status(200).send(userInfo.cart);
+        }
+      );
+    }
+  });
+
+  //상품이 추가된 정보를 redux에 넣기
 });
 
 module.exports = router;
