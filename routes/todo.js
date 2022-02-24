@@ -104,11 +104,15 @@ router.get("/todo_by_id", (req, res) => {
   let type = req.query.type;
   let todoId = req.query.id;
 
-  Todo.find({ _id: todoId })
+  if (type == "array") {
+    let ids = req.query.id.split(",");
+    todoId = ids;
+  }
+  Todo.find({ _id: { $in: todoId } })
     .populate("writer")
     .exec((err, todo) => {
       if (err) return res.status(400).send(err);
-      return res.status(200).send({ success: true, todo });
+      return res.status(200).json({ success: true, todo });
     });
 });
 
